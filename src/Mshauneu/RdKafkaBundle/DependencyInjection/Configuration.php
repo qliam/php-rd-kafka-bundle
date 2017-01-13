@@ -26,11 +26,12 @@ class Configuration implements ConfigurationInterface {
 		$rootNode = $tree->root('mshauneu_rd_kafka');
 		$rootNode
 			->children()
+				->scalarNode('zookeeper')->defaultNull()->end()
 				->arrayNode('producers')
 					->canBeUnset()
 					->prototype('array')
 						->children()
-							->scalarNode('brokers')->isRequired()->end()
+							->scalarNode('brokers')->defaultNull()->end()
 							->scalarNode('topic')->isRequired()->end()
 							->append($this->getPropertiesNodeDef())
 							->append($this->getTopicProducerPropertiesNodeDef())
@@ -42,7 +43,7 @@ class Configuration implements ConfigurationInterface {
 					->canBeUnset()
 					->prototype('array')
 						->children()
-							->scalarNode('brokers')->isRequired()->end()
+							->scalarNode('brokers')->defaultNull()->end()
 							->scalarNode('topic')->isRequired()->end()
 							->append($this->getPropertiesNodeDef())
 							->append($this->getTopicConsumerPropertiesNodeDef())

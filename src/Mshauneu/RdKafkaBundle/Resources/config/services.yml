@@ -2,3 +2,16 @@ services:
   mshauneu_rd_kafka:
     class: Mshauneu\RdKafkaBundle\Topic\Manager
     lazy: true
+
+  mshauneuu_rd_zookeeper_api:
+    class: Mshauneu\RdKafkaBundle\Zookeeper\ZookeeperApi
+    lazy: true
+
+  mshauneuu_rd_zookeeper_cache:
+    class: Mshauneu\RdKafkaBundle\Zookeeper\ZookeeperCache
+    lazy: true
+
+  mshauneuu_rd_zookeeper:
+    class: Mshauneu\RdKafkaBundle\Zookeeper\ZookeeperManager
+    lazy: true
+    arguments: [ "@mshauneuu_rd_zookeeper_api", "@mshauneuu_rd_zookeeper_cache" ]
