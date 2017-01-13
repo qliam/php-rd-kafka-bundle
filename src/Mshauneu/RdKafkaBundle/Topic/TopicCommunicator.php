@@ -2,6 +2,7 @@
 
 namespace Mshauneu\RdKafkaBundle\Topic;
 
+use Mshauneu\RdKafkaBundle\Zookeeper\ZookeeperManager;
 use RdKafka\Conf;
 use RdKafka\TopicConf;
 
@@ -21,18 +22,24 @@ abstract class TopicCommunicator {
 	protected $props;
 	protected $topic;
 	protected $topicProps;
-	
+
+	/**
+	 * @var ZookeeperManager
+	 */
+	protected $zookeeperManager;
+
 	/**
 	 * @param string $brokers  
 	 * @param object $props
 	 * @param string $topic
 	 * @param object $topicProps
 	 */
-	public function __construct($brokers, $props, $topic, $topicProps) {
+	public function __construct($brokers, $props, $topic, $topicProps, $zookeeperManager) {
 		$this->brokers = $brokers;
 		$this->props = $props;
 		$this->topic = $topic;
 		$this->topicProps = $topicProps;
+		$this->zookeeperManager = $zookeeperManager;
 	}
 
 	/**

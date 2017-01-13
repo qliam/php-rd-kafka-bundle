@@ -34,6 +34,9 @@ class TopicProducer extends TopicCommunicator {
 		
 		$config = $this->getConfig($this->props);
 		$producer = new Producer($config);
+		if ($this->brokers === null) {
+			$this->brokers = $this->zookeeperManager->resolve($this->topic);
+		}
 		$producer->addBrokers($this->brokers);
 		$producerTopicConf = $this->getTopicConfig($this->topicProps);
 		$this->producerTopic = $producer->newTopic($this->topic, $producerTopicConf);

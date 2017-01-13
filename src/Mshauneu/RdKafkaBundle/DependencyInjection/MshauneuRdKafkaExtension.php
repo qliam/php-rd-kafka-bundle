@@ -40,9 +40,6 @@ class MshauneuRdKafkaExtension extends Extension {
         	foreach ($config['producers'] as $producerName => $producerConfig) {
         		$brokers = $producerConfig["brokers"];
         		$topic = $producerConfig["topic"];
-				if ($brokers === null) {
-					$brokers = $container->get('mshauneuu_rd_zookeeper')->resolve($topic);
-				}
         		$props = array_key_exists("properties", $producerConfig) ? $producerConfig["properties"] : null;
         		$topicProps = array_key_exists("topic_properties", $producerConfig) ? $producerConfig["topic_properties"] : null;
         		$def->addMethodCall('addProducer', [$producerName, $brokers, $props, $topic, $topicProps]);
@@ -53,9 +50,6 @@ class MshauneuRdKafkaExtension extends Extension {
         	foreach ($config['consumers'] as $consumerName => $consumerConfig) {
         		$brokers = $consumerConfig["brokers"];
         		$topic = $consumerConfig["topic"];
-				if ($brokers === null) {
-					$brokers = $container->get('mshauneuu_rd_zookeeper')->resolve($topic);
-				}
         		$props = array_key_exists("properties", $consumerConfig) ? $consumerConfig["properties"] : null;
         		$topicProps = array_key_exists("topic_properties", $consumerConfig) ? $consumerConfig["topic_properties"] : null;
         		$def->addMethodCall('addConsumer', [$consumerName, $brokers, $props, $topic, $topicProps]);

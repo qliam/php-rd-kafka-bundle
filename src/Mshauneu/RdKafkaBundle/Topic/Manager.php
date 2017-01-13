@@ -1,6 +1,7 @@
 <?php
 
 namespace Mshauneu\RdKafkaBundle\Topic;
+use Mshauneu\RdKafkaBundle\Zookeeper\ZookeeperManager;
 
 
 /**
@@ -19,14 +20,27 @@ class Manager {
 	 * @var Consumer[]
 	 */
 	protected $consumers = array();
-	
+
+	/**
+	 * @var ZookeeperManager
+	 */
+	protected $zookeeperManager;
+
+	/**
+	 * Manager constructor.
+	 * @param ZookeeperManager $zookeeperManager
+	 */
+	function __construct(ZookeeperManager $zookeeperManager)
+	{
+		$this->zookeeperManager = $zookeeperManager;
+	}
 
 	/**
 	 * @param string $name	
 	 * @param $props
 	 */
 	public function addProducer($name, $brokers, $props, $topic, $topicProps) {
-		$this->producers[$name] = new TopicProducer($brokers, $props, $topic, $topicProps);
+		$this->producers[$name] = new TopicProducer($brokers, $props, $topic, $topicProps, $this->zookeeperManager);
 	}
 
 	/**
@@ -42,7 +56,7 @@ class Manager {
 	 * @param $props
 	 */
 	public function addConsumer($name, $brokers, $props, $topic, $topicProps) {
-		$this->consumers[$name] = new TopicConsumer($brokers, $props, $topic, $topicProps);
+		$this->consumers[$name] = new TopicConsumer($brokers, $props, $topic, $topicProps, $this->zookeeperManager);
 	}
 	
 	

@@ -2,6 +2,7 @@ services:
   mshauneu_rd_kafka:
     class: Mshauneu\RdKafkaBundle\Topic\Manager
     lazy: true
+    arguments: ["@mshauneuu_rd_zookeeper"]
 
   mshauneuu_rd_zookeeper_api:
     class: Mshauneu\RdKafkaBundle\Zookeeper\ZookeeperApi

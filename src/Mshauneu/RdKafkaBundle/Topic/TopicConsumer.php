@@ -35,6 +35,9 @@ class TopicConsumer extends TopicCommunicator {
 
 		$config = $this->getConfig($this->props);
 		$consumer = new Consumer($config);
+		if ($this->brokers === null) {
+			$this->brokers = $this->zookeeperManager->resolve($this->topic);
+		}
 		$consumer->addBrokers($this->brokers);
 		$consumerTopicConf = $this->getTopicConfig($this->topicProps);
 		$this->consumerTopic = $consumer->newTopic($this->topic, $consumerTopicConf);
