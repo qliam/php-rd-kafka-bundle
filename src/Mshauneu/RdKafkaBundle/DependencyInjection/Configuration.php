@@ -27,6 +27,7 @@ class Configuration implements ConfigurationInterface {
 		$rootNode
 			->children()
 				->scalarNode('zookeeper')->defaultNull()->end()
+				->integerNode('zookeeper_cache_lifetime')->defaultValue(500)->end()
 				->arrayNode('producers')
 					->canBeUnset()
 					->prototype('array')

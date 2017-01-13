@@ -30,7 +30,6 @@ class ZookeeperApi
      */
     protected $isConnected;
 
-
     /**
      * ZookeeperApi constructor.
      */
@@ -73,7 +72,7 @@ class ZookeeperApi
 
     /**
      * @param string $brokerId
-     * @return array|mixed
+     * @return array
      */
     private function getBrokerInfos(string $brokerId)
     {
@@ -100,15 +99,7 @@ class ZookeeperApi
                 $partitionsSummary[$partition]['brokers'][] = $brokerInfos['host'] . ':' . $brokerInfos['port'];
             }
         }
-        $brokersSummary = array($topicName => $partitionsSummary, 'version' => $topicInfos['version']);
-        return $brokersSummary;
-    }
-
-    public function resolve(string $topic)
-    {
-        $topicInfos = $this->resolveTopic($topic);
-        $brokersSummary = $this->resolveBrokers($topic, $topicInfos);
-        return $brokersSummary;
-
+        $topicSummary = array($topicName => $partitionsSummary, 'version' => $topicInfos['version']);
+        return $topicSummary;
     }
 }

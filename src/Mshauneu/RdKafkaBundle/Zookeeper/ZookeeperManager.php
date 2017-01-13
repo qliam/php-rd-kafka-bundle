@@ -23,6 +23,13 @@ class ZookeeperManager
     protected $zookeeperCache;
 
     /**
+     * Cache time in sec
+     *
+     * @var int
+     */
+    protected $cacheLifetime;
+
+    /**
      * ZookeeperManager constructor.
      * @param ZookeeperApi $zookeeperApi
      * @param ZookeeperCache $zookeeperCache
@@ -31,6 +38,14 @@ class ZookeeperManager
     {
         $this->zookeeperApi = $zookeeperApi;
         $this->zookeeperCache = $zookeeperCache;
+    }
+
+    /**
+     * @param int $cacheLifetime
+     */
+    public function setCacheLifetime(int $cacheLifetime)
+    {
+        $this->cacheLifetime = $cacheLifetime;
     }
 
     /**
@@ -57,11 +72,22 @@ class ZookeeperManager
      */
     public function resolve(string $topic)
     {
-        $topicInfos = $this->zookeeperCache->getTopic($topic);
-        if ($topicInfos === null) {
-            $topicInfos = $this->zookeeperApi->resolve($topic);
-            $this->zookeeperCache->saveTopic($topic, $topicInfos);
+        $topicSummary = $this->zookeeperCache->getTopic($topic);
+
+        if ($topicSummary !== null) {
+            if (($topicSummary['timestamp'] + $this->cacheLifetime) < time()) {
+                $topicInfos = $this->zookeeperApi->resolveTopic($topic);
+                if ($topicInfos['version'] != $topicSummary['version']) {
+                    $this->zookeeperCache->deleteTopic($topic);
+                    $topicSummary = $this->zookeeperApi->resolveBrokers($topic, $topicInfos);
+                    $this->zookeeperCache->saveTopic($topic, $topicSummary);
+                }
+            }
+        } else {
+            $topicInfos = $this->zookeeperApi->resolveTopic($topic);
+            $topicSummary = $this->zookeeperApi->resolveBrokers($topic, $topicInfos);
+            $this->zookeeperCache->saveTopic($topic, $topicSummary);
         }
-        return $this->getBrokersString($topic, $topicInfos);
+        return $this->getBrokersString($topic, $topicSummary);
     }
 }

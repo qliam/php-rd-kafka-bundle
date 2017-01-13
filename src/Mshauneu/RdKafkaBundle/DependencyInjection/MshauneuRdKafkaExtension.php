@@ -32,6 +32,10 @@ class MshauneuRdKafkaExtension extends Extension {
 			$zookeeperApiDef->addMethodCall('setHosts', [$zookeeper]);
 		}
 
+		$cacheLifetime = $config['zookeeper_cache_lifetime'];
+		$zookeeperManagerDef = $container->getDefinition('mshauneuu_rd_zookeeper');
+		$zookeeperManagerDef->addMethodCall('setCacheLifetime', [$cacheLifetime]);
+
         if (array_key_exists('producers', $config) && is_array($config['producers'])) {
         	foreach ($config['producers'] as $producerName => $producerConfig) {
         		$brokers = $producerConfig["brokers"];

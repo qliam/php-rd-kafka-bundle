@@ -21,6 +21,9 @@ class ZookeeperCache
      */
     protected $cache;
 
+    /**
+     * ZookeeperCache constructor.
+     */
     function __construct()
     {
         $this->cache = new FilesystemAdapter();
@@ -32,7 +35,7 @@ class ZookeeperCache
      */
     public function getTopic(string $topicName)
     {
-        $topicCache = $this->cache->getItem('kafka.topic.' . $topicName);
+        $topicCache = $this->cache->getItem($this->getItemName($topicName));
         if ($topicCache->isHit() === false) {
             return null;
         }
@@ -40,10 +43,32 @@ class ZookeeperCache
         return $topic;
     }
 
-    public function saveTopic(string $topicName, $topicInfos)
+    /**
+     * @param string $topicName
+     * @param array $topicInfos
+     */
+    public function saveTopic(string $topicName, array $topicInfos)
     {
-        $topicCache = $this->cache->getItem('kafka.topic.' . $topicName);
+        $topicCache = $this->cache->getItem($this->getItemName($topicName));
+        $topicInfos['timestamp'] = time();
         $topicCache->set(json_encode($topicInfos));
         $this->cache->save($topicCache);
+    }
+
+    /**
+     * @param string $topicName
+     */
+    public function deleteTopic(string $topicName)
+    {
+        $this->cache->deleteItem($this->getItemName($topicName));
+    }
+
+    /**
+     * @param string $topicName
+     * @return string
+     */
+    protected function getItemName(string $topicName)
+    {
+        return 'kafka.topic.' . $topicName;
     }
 }
