@@ -26,6 +26,8 @@ public function registerBundles() {
 Simple configuration could look like:
 ```yaml
 mshauneu_rd_kafka:
+  zookeeper: 127.0.0.1:2181
+  zookeeper_cache_lifetime: 1800
   producers: 
     test_producer: 
       brokers: 127.0.0.1:9092
@@ -41,6 +43,8 @@ mshauneu_rd_kafka:
         auto_offset_reset: smallest
         auto_commit_interval_ms: 100
 ```
+Using zookeeper, brokers params are optionals.
+
 Configuration properties are documented:
 - for producer or  consumer in [CommunicatorConfiguration.php](https://github.com/mshauneu/php-rd-kafka-bundle/blob/master/src/Mshauneu/RdKafkaBundle/DependencyInjection/CommunicatorConfiguration.php)
 - for topic to produce in [TopicProducerConfiguration.php](https://github.com/mshauneu/php-rd-kafka-bundle/blob/master/src/Mshauneu/RdKafkaBundle/DependencyInjection/TopicProducerConfiguration.php)
