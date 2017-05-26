@@ -76,6 +76,7 @@ class ZookeeperApi
      */
     private function getBrokerInfos(string $brokerId)
     {
+        $this->connectIfNeeded();
         try {
             $brokersInfos = $this->zk->get('/brokers/ids/' . $brokerId);
             return json_decode($brokersInfos, true);
